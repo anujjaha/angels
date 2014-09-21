@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 /**
  * Users Controller
  *
@@ -15,6 +16,12 @@ class UsersController extends AppController {
  * @var array
  */
 	public $components = array('Paginator', 'Session');
+        public $uses = array('User','Usermeta');
+        
+        public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow('add','login');
+        }
 
 /**
  * index method
@@ -22,8 +29,13 @@ class UsersController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->User->recursive = 0;
-		$this->set('users', $this->Paginator->paginate());
+            $user_data = $this->Auth->user();
+            if(!empty($user_data) && $user_data['role'] == angels::APP_USER_ROLE_ADMIN)
+            {
+               $this->redirect(array('controller'=>'admins','action'=>'index'));
+            }
+            $this->User->recursive = 0;
+            $this->set('users', $this->Paginator->paginate());
 	}
 
 /**
@@ -37,6 +49,8 @@ class UsersController extends AppController {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}
+                pr($this->User->find('first'));
+                
 		$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
 		$this->set('user', $this->User->find('first', $options));
 	}
@@ -48,13 +62,15 @@ class UsersController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->User->create();
-			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-			}
+
+                    $this->User->create();
+              
+                    if ($this->User->saveAll($this->request->data)) {
+                            $this->Session->setFlash(__('The user has been saved.'));
+                            return $this->redirect(array('action' => 'index'));
+                    } else {
+                            $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+                    }
 		}
 	}
 
@@ -101,4 +117,19 @@ class UsersController extends AppController {
 			$this->Session->setFlash(__('The user could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
-	}}
+	}
+        
+       
+        public function login() {
+            if ($this->request->is('post')) {
+                if ($this->Auth->login()) {
+                    return $this->redirect($this->Auth->redirect());
+                }
+                $this->Session->setFlash(__('Invalid username or password, try again'));
+            }
+        }
+
+        public function logout() {
+            return $this->redirect($this->Auth->logout());
+        }
+}

@@ -12,5 +12,6 @@ class Memorial extends AppModel {
  * @var string
  */
 	public $displayField = 'title';
-
+        public $belongsTo = 'User';
+        public $hasMany = 'Tribute';
 }

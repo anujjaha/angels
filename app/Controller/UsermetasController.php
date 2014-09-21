@@ -9,13 +9,18 @@ App::uses('AppController', 'Controller');
  */
 class UsermetasController extends AppController {
 
+    
+        public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow('add','login');
+        }
 /**
  * Components
  *
  * @var array
  */
 	public $components = array('Paginator', 'Session');
-
+        public $uses = array('Usermeta','User');
 /**
  * index method
  *

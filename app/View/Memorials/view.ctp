@@ -73,34 +73,15 @@
 		</dd>
 		<dt><?php echo __('Message'); ?></dt>
 		<dd>
-			<?php echo h($memorial['Memorial']['message']); ?>
+			<?php echo html_entity_decode($memorial['Memorial']['message']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Img'); ?></dt>
 		<dd>
-			<?php echo h($memorial['Memorial']['img']); ?>
+			<?php echo $this->Html->image('memorials/'.$memorial['Memorial']['img'],array('width'=>150,'height'=>120)); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Viewcount'); ?></dt>
-		<dd>
-			<?php echo h($memorial['Memorial']['viewcount']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Status'); ?></dt>
-		<dd>
-			<?php echo h($memorial['Memorial']['status']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($memorial['Memorial']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
-			<?php echo h($memorial['Memorial']['modified']); ?>
-			&nbsp;
-		</dd>
+		
 	</dl>
 </div>
 <div class="actions">

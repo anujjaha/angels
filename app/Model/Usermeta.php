@@ -5,5 +5,5 @@ App::uses('AppModel', 'Model');
  *
  */
 class Usermeta extends AppModel {
-
+    public $belongTo = array('User');
 }

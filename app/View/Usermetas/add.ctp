@@ -3,7 +3,8 @@
 	<fieldset>
 		<legend><?php echo __('Add Usermeta'); ?></legend>
 	<?php
-		echo $this->Form->input('user_id');
+		echo $this->Form->input('User.username');
+		echo $this->Form->input('User.password');
 		echo $this->Form->input('firstname');
 		echo $this->Form->input('middlename');
 		echo $this->Form->input('lastname');

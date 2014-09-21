@@ -5,5 +5,5 @@ App::uses('AppModel', 'Model');
  *
  */
 class Tribute extends AppModel {
-
+    public $belongsTo = array('User','Memorial');
 }

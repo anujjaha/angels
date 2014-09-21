@@ -6,6 +6,13 @@
 		echo $this->Form->input('title');
 		echo $this->Form->input('image');
 		echo $this->Form->input('status');
+                echo $this->Tinymce->input('Post.content', array(
+            'label' => 'Content'
+            ),array(
+                'language'=>'en'
+            ),
+            'advanced'
+        ); 
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>

@@ -15,13 +15,15 @@ class MemorialsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator', 'Session');
-
+        public $helpers = array('Tinymce');
+       
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
+		$this->layout = "default";
 		$this->Memorial->recursive = 0;
 		$this->set('memorials', $this->Paginator->paginate());
 	}
@@ -47,8 +49,24 @@ class MemorialsController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
+                if ($this->request->is('post')) {
+                    $message = $this->bbcodeHtml($this->request->data['message']);
+                    $this->request->data['Memorial']['message'] = $message;
+                    unset($this->request->data['message']);
+                    if(!empty($this->request->data['Memorial']['img'])) {
+                       
+                        $upload_status = $this->upload_images($this->request->data,'Memorial','img','images','memorials');
+                    
+                        if(!empty($upload_status) and $upload_status['status'] == true){
+                            
+                            $this->request->data['Memorial']['img'] = $upload_status['filename'];
+                        } else {
+                            unset( $this->request->data['Memorial']['img']);
+                        }
+                       
+                    }
 			$this->Memorial->create();
+                       
 			if ($this->Memorial->save($this->request->data)) {
 				$this->Session->setFlash(__('The memorial has been saved.'));
 				return $this->redirect(array('action' => 'index'));
@@ -56,6 +74,7 @@ class MemorialsController extends AppController {
 				$this->Session->setFlash(__('The memorial could not be saved. Please, try again.'));
 			}
 		}
+                $this->set('user_id',$this->Auth->user('id'));
 	}
 
 /**
@@ -70,8 +89,25 @@ class MemorialsController extends AppController {
 			throw new NotFoundException(__('Invalid memorial'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+                    
+                         $message = $this->bbcodeHtml($this->request->data['message']);
+                        $this->request->data['Memorial']['message'] = $message;  
+                        
+                        
+                        if(!empty($this->request->data['Memorial']['img'])) {
+                            $upload_status = $this->upload_images($this->request->data,'Memorial','img','images','memorials');
+                            
+                            if(!empty($upload_status) and $upload_status['status'] == true){
+                            $this->request->data['Memorial']['img'] = $upload_status['filename'];
+                            } else {
+                                unset( $this->request->data['Memorial']['img']);
+                            }
+                        }
 			if ($this->Memorial->save($this->request->data)) {
-				$this->Session->setFlash(__('The memorial has been saved.'));
+                            
+                       
+                            
+				$this->Session->setFlash(__('Thes memorial has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The memorial could not be saved. Please, try again.'));

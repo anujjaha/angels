@@ -15,6 +15,7 @@ class GiftsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator', 'Session');
+        public $helpers = array('Tinymce');
 
 /**
  * index method
@@ -22,6 +23,8 @@ class GiftsController extends AppController {
  * @return void
  */
 	public function index() {
+                echo "tesT";
+                pr($this->TinyMCE);
 		$this->Gift->recursive = 0;
 		$this->set('gifts', $this->Paginator->paginate());
 	}

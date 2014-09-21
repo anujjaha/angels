@@ -12,5 +12,5 @@ class Gift extends AppModel {
  * @var string
  */
 	public $displayField = 'title';
-
+        public $belongsTo = array('User');
 }
