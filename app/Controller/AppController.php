@@ -56,6 +56,12 @@ class AppController extends Controller {
      
     public function beforeFilter() {
         $this->Auth->allow('add', 'login');
+        $user_data = $this->Auth->user();
+//        
+//        if(!empty($user_data) && $user_data['role'] == angels::APP_USER_ROLE_ADMIN)
+//            {
+//               $this->redirect(array('controller'=>'admins','action'=>'index'));
+//            }
     }
     
     public function upload_images($filedata=null,$modelname=null,$filename=null,$type=null,$filepath=null) {
